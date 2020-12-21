@@ -20,8 +20,12 @@ public class DoorController : MonoBehaviour
     {
         if(Input.GetKeyDown(key))
         {
-            isOpen = !isOpen;
-            doorAnimator.SetBool("isOpen" , isOpen);
+            DoorAnimation();
         }
+    }
+    public void DoorAnimation()
+    {
+        isOpen = !isOpen;
+        doorAnimator.SetBool("isOpen" , isOpen);
     }
 }
