@@ -14,7 +14,7 @@ public class TankController : MonoBehaviour
     private GameObject bullet;
 
     //砲弾の発射位置
-    private Vector3 point;
+    private GameObject point;
 
     //砲弾の発射の感覚をあけるためのもの
     private float timeBullet;
@@ -24,7 +24,7 @@ public class TankController : MonoBehaviour
         //砲身を取得(実際はその土台)
         Barrel = GameObject.Find("Pivot");
         //砲弾の発射位置を取得
-        point = Barrel.transform.GetChild(1).transform.position;
+        point = Barrel.transform.GetChild(1).gameObject;
 
         //開始時刻で初期化
         timeBullet = Time.time;
@@ -58,7 +58,7 @@ public class TankController : MonoBehaviour
             //砲身の角度を弧度法で取得
             y = Barrel.transform.localEulerAngles.y * Mathf.Deg2Rad;
             //砲弾を生成、pointの位置に向きはそのまま
-            var obj = Instantiate(bullet , point , Quaternion.identity);
+            var obj = Instantiate(bullet , point.transform.position , Quaternion.identity);
             //AddForceで砲弾を飛ばす,
             obj.GetComponent<Rigidbody>().AddForce(0 , Mathf.Cos(y) * speed , Mathf.Sin(y) * -speed);
             //射撃終了時刻で時間をリセット
