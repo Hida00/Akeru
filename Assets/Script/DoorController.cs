@@ -4,27 +4,25 @@ using UnityEngine;
 
 public class DoorController : MonoBehaviour
 {
+    //ドアを開けるアニメーション用
     private Animator doorAnimator;
 
-    [SerializeField]
-    private KeyCode key;
-
+    //ドアが開いているかどうかの真偽変数
     private bool isOpen = true;
 
     void Start()
     {
+        //ドアのアニメーター取得
         doorAnimator = this.GetComponent<Animator>();
     }
 
     void Update()
     {
-        if(Input.GetKeyDown(key))
-        {
-            DoorAnimation();
-        }
+
     }
     public void DoorAnimation()
     {
+        //ドアが開いていたら閉め、閉じていたら開ける
         isOpen = !isOpen;
         doorAnimator.SetBool("isOpen" , isOpen);
     }

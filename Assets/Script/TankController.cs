@@ -12,12 +12,24 @@ public class TankController : MonoBehaviour
     //砲弾、Prefabを入れる
     [SerializeField]
     private GameObject bullet;
+    //DoorController
+    private DoorController _door;
 
     //砲弾の発射位置
     private GameObject point;
 
     //砲弾の発射の感覚をあけるためのもの
     private float timeBullet;
+
+    //Tankのアニメーター
+    private Animator tankAnime;
+
+    //アニメーション用の真偽変数
+    private bool isStay = true;
+
+    //Doorの開閉を管理する真偽変数
+    private bool isDoorOpen = false;
+    private bool isPass = false;
 
     void Start()
     {
@@ -28,6 +40,13 @@ public class TankController : MonoBehaviour
 
         //開始時刻で初期化
         timeBullet = Time.time;
+
+        //Animatorを取得
+        tankAnime = this.GetComponent<Animator>();
+
+        //
+        _door = GameObject.Find("axis").GetComponent<DoorController>();
+
     }
 
     void Update()
@@ -63,6 +82,34 @@ public class TankController : MonoBehaviour
             obj.GetComponent<Rigidbody>().AddForce(0 , Mathf.Cos(y) * speed , Mathf.Sin(y) * -speed);
             //射撃終了時刻で時間をリセット
             timeBullet = Time.time;
+		}
+        //O入力で移動開始Debug用
+        if(Input.GetKeyDown(KeyCode.O))
+        {
+            isStay = !isStay;
+            tankAnime.SetBool("isStay" , isStay);
+        }
+        //z座標の取得
+        float z = this.transform.position.z;
+        //tankのz座標が25以下(ドアをくぐる前)-10以上(ドアをくぐった後)の時に実行
+        if(z <= 25f && z >= -10f)
+		{
+            //ドアが開いておらず、ドアをくぐっていないとき
+            if(!isDoorOpen && !isPass)
+			{
+                //ドアを開ける
+                isDoorOpen = !isDoorOpen;
+                _door.DoorAnimation();
+			}
+            //ドアが開いている時にドアをくぐったことを感知
+            if(z <= -7f && isDoorOpen) isPass = !isPass;
+            //ドアが開いていて、ドアをくぐったあと
+            if(isDoorOpen && isPass)
+			{
+                //ドアを閉める
+                isDoorOpen = !isDoorOpen;
+                _door.DoorAnimation();
+			}
 		}
     }
 }
