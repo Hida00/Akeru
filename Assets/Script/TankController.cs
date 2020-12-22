@@ -38,14 +38,15 @@ public class TankController : MonoBehaviour
         //砲弾の発射位置を取得
         point = Barrel.transform.GetChild(1).gameObject;
 
+        //開始時刻で初期化
+        timeBullet = Time.time;
+
         //Animatorを取得
         tankAnime = this.GetComponent<Animator>();
 
         //
         _door = GameObject.Find("axis").GetComponent<DoorController>();
 
-        //開始時刻で初期化
-        timeBullet = Time.time;
     }
 
     void Update()
