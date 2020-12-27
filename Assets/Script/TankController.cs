@@ -71,9 +71,9 @@ public class TankController : MonoBehaviour
         float timedif = Time.time - timeBullet;
         //Space入力で砲弾を発射
         if(Input.GetKeyDown(KeyCode.Space) && timedif >= 0.4f)
-		{
+        {
             //ベースの1000に時間が空くほど速度が上がるようにする、(三項演算子…使うな！！！)
-            float speed = 1000f * ( (timedif > 1.5f ? 1.5f : timedif) + 0.5f );
+            float speed = 900f * ( ( timedif > 1.5f ? 1.5f : timedif ) + 0.5f );
             //砲身の角度を弧度法で取得
             y = Barrel.transform.localEulerAngles.y * Mathf.Deg2Rad;
             //砲弾を生成、pointの位置に向きはそのまま
@@ -82,34 +82,35 @@ public class TankController : MonoBehaviour
             obj.GetComponent<Rigidbody>().AddForce(0 , Mathf.Cos(y) * speed , Mathf.Sin(y) * -speed);
             //射撃終了時刻で時間をリセット
             timeBullet = Time.time;
-		}
-        //O入力で移動開始Debug用
-        if(Input.GetKeyDown(KeyCode.O))
-        {
-            isStay = !isStay;
-            tankAnime.SetBool("isStay" , isStay);
         }
         //z座標の取得
         float z = this.transform.position.z;
         //tankのz座標が25以下(ドアをくぐる前)-10以上(ドアをくぐった後)の時に実行
         if(z <= 25f && z >= -10f)
-		{
+        {
             //ドアが開いておらず、ドアをくぐっていないとき
             if(!isDoorOpen && !isPass)
-			{
+            {
                 //ドアを開ける
                 isDoorOpen = !isDoorOpen;
                 _door.DoorAnimation();
-			}
+            }
             //ドアが開いている時にドアをくぐったことを感知
             if(z <= -7f && isDoorOpen) isPass = !isPass;
             //ドアが開いていて、ドアをくぐったあと
             if(isDoorOpen && isPass)
-			{
+            {
                 //ドアを閉める
                 isDoorOpen = !isDoorOpen;
                 _door.DoorAnimation();
-			}
-		}
+            }
+        }
     }
+    //クリアした時のTankの前進
+    public void GoTank()
+    {
+        isStay = !isStay;
+        tankAnime.SetBool("isStay" , isStay);
+    }
+    
 }
