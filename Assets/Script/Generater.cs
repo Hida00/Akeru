@@ -13,6 +13,9 @@ public class Generater : MonoBehaviour
     //ドアの親オブジェクト
     public GameObject Doors;
 
+    //ヒント
+    public GameObject hint;
+
     //終了時に表示するテキスト
     public Text result;
     public Text Score;
@@ -33,7 +36,8 @@ public class Generater : MonoBehaviour
     private int MaxCount = 0;
 
     //ステージデータのファイル名の設定
-    string path = "First";
+    public static string StagePath = "1";
+    private string path;
 
     //開始時刻と終了時刻
     private float startTime;
@@ -45,6 +49,7 @@ public class Generater : MonoBehaviour
 
     void Start()
     {
+        path = StagePath;
         Time.timeScale = 2;
         ReadStageData();
         startTime = Time.time;
@@ -53,6 +58,7 @@ public class Generater : MonoBehaviour
 
     void Update()
     {
+        //
         if(DoorFallCount >= MaxCount)
         {
             Destroy(Doors.gameObject);
@@ -76,7 +82,7 @@ public class Generater : MonoBehaviour
             GameObject.Find("Tank").GetComponent<TankController>().GoTank();
 
             result.gameObject.SetActive(true);
-            result.text = "Finish";
+            result.text = "Failed";
             result.color = Color.blue;
             result.gameObject.SetActive(true);
 
@@ -95,6 +101,7 @@ public class Generater : MonoBehaviour
         var csv = Resources.Load<TextAsset>("StageData/" + path);
         StringReader st = new StringReader(csv.text);
 
+        //0:ドアの個数,1:終了時刻
         string[] info = st.ReadLine().Split(',');
         MaxCount = int.Parse(info[0]);
         endTime = float.Parse(info[1]);
@@ -110,7 +117,18 @@ public class Generater : MonoBehaviour
             obj.GetComponent<MiniDoor>().speed = float.Parse(values[4]);
             obj.GetComponent<MiniDoor>().Xpos  = float.Parse(values[1]);
             obj.GetComponent<MiniDoor>().width = float.Parse(values[5]);
-            obj.GetComponent<MiniDoor>().transform.GetChild(0).GetComponent<DoorFall>().score = (num + 1) * 100;
+            obj.GetComponent<MiniDoor>().transform.GetChild(0).GetComponent<DoorFall>().score = (num + 1) * 1000;
 		}
 	}
+    //ヒントの表示・非表示
+    public void ShowHint()
+	{
+        Time.timeScale = 0;
+        hint.SetActive(true);
+	}
+    public void HideHint()
+    {
+        Time.timeScale = 2;
+        hint.SetActive(false);
+    }
 }
