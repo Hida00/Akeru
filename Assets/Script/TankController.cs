@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TankController : MonoBehaviour
 {
@@ -57,15 +58,15 @@ public class TankController : MonoBehaviour
         float y = Barrel.transform.localEulerAngles.y;
         if(y > 30f && y < 85f) //30°～85°の範囲で移動させる
         {
-            Barrel.transform.Rotate(new Vector3(0 , rotate * 0.1f));
+            Barrel.transform.Rotate(new Vector3(0 , rotate * -0.1f));
         }
-        else if(y >= 85f && rotate <= 0f) //範囲外に行かないようにする
+        else if(y >= 85f && rotate >= 0f) //範囲外に行かないようにする
         {
-            Barrel.transform.Rotate(new Vector3(0 , rotate * 0.1f));
+            Barrel.transform.Rotate(new Vector3(0 , rotate * -0.1f));
         }
-        else if(y <= 30f && rotate >= 0f) //上に同じ
+        else if(y <= 30f && rotate <= 0f) //上に同じ
         {
-            Barrel.transform.Rotate(new Vector3(0 , rotate * 0.1f));
+            Barrel.transform.Rotate(new Vector3(0 , rotate * -0.1f));
         }
 
         float timedif = Time.time - timeBullet;
@@ -103,6 +104,7 @@ public class TankController : MonoBehaviour
                 //ドアを閉める
                 isDoorOpen = !isDoorOpen;
                 _door.DoorAnimation();
+                Invoke(nameof(SceneChange) , 6.0f);
             }
         }
     }
@@ -112,5 +114,8 @@ public class TankController : MonoBehaviour
         isStay = !isStay;
         tankAnime.SetBool("isStay" , isStay);
     }
-    
+    void SceneChange()
+	{
+        SceneManager.LoadScene("Select");
+	}
 }
